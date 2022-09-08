@@ -38,6 +38,7 @@
             </a>
             <button type="button" class="btn btn-danger delete" data-id="<%=posts[i]._id%>">삭제</button>
             <button type="button" class="btn btn-danger edit" data-id="<%=posts[i]._id%>" onclick="location.href='/edit/<%=posts[i]._id%>'">수정</button>
+            <button type="button" class="btn btn-secondary chat" data-id="<%=posts[i].작성자%>">채팅</button>
           </li>
           <%}%>
       </ul>
@@ -53,6 +54,16 @@
     </script>
     
     <script>
+        $('.chat').click(function(e){
+          var _id = e.target.dataset.id;
+          $.post('/chatroom', {당한사람id : _id})
+          .then(()=>{
+            console.log('채팅방 게시물 생성완료')
+          })
+        });
+    </script>
+
+    <script>
       $('.delete').click(function (e) {
         var 글번호 = e.target.dataset.id;
         var 지금누른거 = $(this);
@@ -63,10 +74,12 @@
           data: { _id: 글번호 },
         }).done(function (결과) {
           console.log("성공했어욤.")
+          console.log(결과);
           // location.href='/list';
-          지금누른거.parent('li').fadeOut();
+          // 지금누른거.parent('li').fadeOut();
         }).fail(function (xhr, textStatus, errorThrown) {
           console.log(xhr, textStatus, errorThrown);
+          alert('본인이 작성한 게시글만 삭제할 수 있습니다.');
         });
       });
     </script>
