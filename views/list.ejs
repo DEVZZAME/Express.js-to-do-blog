@@ -38,7 +38,7 @@
             </a>
             <button type="button" class="btn btn-danger delete" data-id="<%=posts[i]._id%>">삭제</button>
             <button type="button" class="btn btn-danger edit" data-id="<%=posts[i]._id%>" onclick="location.href='/edit/<%=posts[i]._id%>'">수정</button>
-            <button type="button" class="btn btn-secondary chat" data-id="<%=posts[i].작성자%>">채팅</button>
+            <button type="button" class="btn btn-secondary chat" data-id="<%=posts[i].작성자%>" onclick="location.href='/chat'">채팅</button>
           </li>
           <%}%>
       </ul>
