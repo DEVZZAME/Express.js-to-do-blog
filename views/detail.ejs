@@ -14,7 +14,11 @@
   </head>
   <body>
 
-    <%- include('nav.html') %>
+    <%if(login==true){%>
+      <%- include('nav_login.html') %>
+    <%}else{%>
+      <%- include('nav.html') %>
+      <%}%>
     
     <div class="container mt-4">
       <h4 class="text-center">상세페이지</h4>
@@ -28,7 +32,7 @@
         </div>
       </div>
     </div>
-    
+    <%- include('footer.html') %>
     <!-- Optional JavaScript; choose one of the two! -->
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>

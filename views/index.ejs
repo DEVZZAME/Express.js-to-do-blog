@@ -1,27 +1,37 @@
 <!doctype html>
 <html>
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Hello, world!</title>
-  </head>
-  <body>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 
-    <%- include('nav.html') %>
+  <title>Hello, world!</title>
+</head>
 
-    <div class="jumbotron">
-      <h1 class="display-4">Hello, world!</h1>
-      <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-      <hr class="my-4">
-      <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-      <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-    </div>
-
+<body>
+  <%if(login==true){%>
+  <%- include('nav_login.html') %>
+  <%}else{%>
+  <%- include('nav.html') %>
+  <%}%>
+<!--  -->
+<div class="position-relative overflow-hidden m-md-1 text-center bg-light">
+  <div class="col-md-5 p-lg-5 mx-auto my-5">
+    <h1 class="display-4 font-weight-normal">환영합니다!</h1>
+    <img src="https://blog.kakaocdn.net/dn/bdXReG/btqFAN8vdsK/BfyO2PJ2jG4baNkgZ53OT1/img.jpg" class="img-fluid" style="width: 350px;" alt="write_diary">
+    <p class="lead font-weight-normal">당신의 하루를 들려주세요 : D</p>
+    <p class="lead font-weight-normal">오늘을 기억하고 싶을 때...</p>
+    <a class="btn btn-outline-secondary" href="#">Coming soon</a>
+  </div>
+  <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+</div>
+    
+<%- include('footer.html') %>
+    
 
 
     <!-- Optional JavaScript; choose one of the two! -->

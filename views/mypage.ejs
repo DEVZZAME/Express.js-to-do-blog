@@ -12,10 +12,14 @@
   </head>
   <body>
 
-    <%- include('nav.html') %>
+    <%if(login==true){%>
+      <%- include('nav_login.html') %>
+    <%}else{%>
+      <%- include('nav.html') %>
+      <%}%>
 
     <p> <%=사용자.id%>님의 마이페이지입니다.</p>
-
+    <%- include('footer.html') %>
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->

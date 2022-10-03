@@ -30,75 +30,6 @@ MongoClient.connect(
   }
 );
 
-app.get("/", function (요청, 응답) {
-  응답.render("index.ejs");
-});
-
-app.get("/write", function (요청, 응답) {
-  응답.render("write.ejs");
-});
-
-app.get("/list", function (요청, 응답) {
-  db.collection("post")
-    .find()
-    .toArray(function (에러, 결과) {
-      console.log(결과);
-      응답.render("list.ejs", { posts: 결과 });
-    });
-});
-
-app.get("/search", function (요청, 응답) {
-  console.log(요청.query.value);
-  var 검색조건 = [
-    {
-      $search: {
-        index: "titleSearch",
-        text: {
-          query: 요청.query.value,
-          path: "할일", // 할일날짜 둘다 찾고 싶으면 ['할일', '날짜'] 배열 형태로 입력
-        },
-      },
-    },
-    { $sort: { _id: 1 } }, //-1은 내림차순 1은 오름차순
-    { $limit: 10 }, //포스팅 갯수 10개로 제한
-  ];
-  if (요청.query.value) {
-    db.collection("post")
-      .aggregate(검색조건)
-      .toArray(function (에러, 결과) {
-        console.log(결과);
-        응답.render("search.ejs", { posts: 결과 });
-      });
-  } else {
-    db.collection("post")
-      .find({})
-      .toArray(function (에러, 결과) {
-        console.log(결과);
-        응답.render("search.ejs", { posts: 결과 });
-      });
-  }
-});
-
-app.get("/detail/:id", function (요청, 응답) {
-  db.collection("post").findOne(
-    { _id: parseInt(요청.params.id) },
-    function (에러, 결과) {
-      console.log(결과);
-      응답.render("detail.ejs", { data: 결과 });
-    }
-  );
-});
-
-app.get("/edit/:id", function (요청, 응답) {
-  db.collection("post").findOne(
-    { _id: parseInt(요청.params.id) },
-    function (에러, 결과) {
-      console.log(결과);
-      응답.render("edit.ejs", { post: 결과 });
-    }
-  );
-});
-
 app.put("/edit", function (요청, 응답) {
   db.collection("post").updateOne(
     { _id: parseInt(요청.body.id) },
@@ -140,7 +71,13 @@ app.get("/logout", function (req, res) {
 
 app.get("/mypage", 로그인했니, function (요청, 응답) {
   console.log(요청.user);
-  응답.render("mypage.ejs", (사용자 = 요청.user));
+  if(요청.user){
+    const login = true;
+    응답.render("mypage.ejs", {사용자 : 요청.user, login});
+  }else{
+    const login = false;
+    응답.render("mypage.ejs", {사용자 : 요청.user, login});
+  }
 });
 
 function 로그인했니(요청, 응답, next) {
@@ -198,6 +135,159 @@ passport.deserializeUser(function (아이디, done) {
 // 아래 코드에서는 info가 세션정보임.
 // console로 info를 출력해보면 쿠키를 비롯해 로그인 시도 결과에 대해서 message로 알려줌. 성공시에는 undefined.
 // info.message에는 로그인에 실패한 이유가 담기게 되고, 이 결과를 각 조건에 맞게 alert 창이나 html에 추가해 뿌려주면 됨.
+
+
+app.get("/", function (요청, 응답) {
+  if(요청.user){
+    const login = true;
+    응답.render("index.ejs", {login});
+  }else{
+    const login = false;
+    응답.render("index.ejs", {login});
+  }
+  
+});
+
+app.get("/write", function (요청, 응답) {
+  if(요청.user){
+    const login = true;
+    응답.render("write.ejs", {login});
+  }else{
+    const login = false;
+    응답.render("write.ejs", {login});
+  }
+});
+
+app.get("/list", function (요청, 응답) {
+  if(요청.user){
+    const login = true;
+    db.collection("post")
+    .find()
+    .toArray(function (에러, 결과) {
+      console.log(login);
+      응답.render("list.ejs", {login, posts: 결과});
+    });
+  }else{
+    const login = false;
+    db.collection("post")
+    .find()
+    .toArray(function (에러, 결과) {
+      console.log(login);
+      응답.render("list.ejs", {login, posts: 결과});
+    });
+  }
+});
+
+app.get("/edit/:id", function (요청, 응답) {
+  if(요청.user){
+    const login = true;
+    db.collection("post").findOne(
+      { _id: parseInt(요청.params.id) },
+      function (에러, 결과) {
+        console.log(결과);
+        응답.render("edit.ejs", {login, post: 결과 });
+      }
+    );
+  }else{
+    const login = false;
+    db.collection("post").findOne(
+      { _id: parseInt(요청.params.id) },
+      function (에러, 결과) {
+        console.log(결과);
+        응답.render("edit.ejs", {login, post: 결과 });
+      }
+    );
+  }
+});
+
+app.get("/search", function (요청, 응답) {
+  if(요청.user){
+    const login = true;
+    var 검색조건 = [
+      {
+        $search: {
+          index: "titleSearch",
+          text: {
+            query: 요청.query.value,
+            path: "할일", // 할일날짜 둘다 찾고 싶으면 ['할일', '날짜'] 배열 형태로 입력
+          },
+        },
+      },
+      { $sort: { _id: 1 } }, //-1은 내림차순 1은 오름차순
+      { $limit: 10 }, //포스팅 갯수 10개로 제한
+    ];
+    if (요청.query.value) {
+      db.collection("post")
+        .aggregate(검색조건)
+        .toArray(function (에러, 결과) {
+          console.log(결과);
+          응답.render("search.ejs", {login, posts: 결과 });
+        });
+    } else {
+      db.collection("post")
+        .find({})
+        .toArray(function (에러, 결과) {
+          console.log(결과);
+          응답.render("search.ejs", {login, posts: 결과 });
+        });
+    }
+  }else{
+    const login = false;
+    var 검색조건 = [
+      {
+        $search: {
+          index: "titleSearch",
+          text: {
+            query: 요청.query.value,
+            path: "할일", // 할일날짜 둘다 찾고 싶으면 ['할일', '날짜'] 배열 형태로 입력
+          },
+        },
+      },
+      { $sort: { _id: 1 } }, //-1은 내림차순 1은 오름차순
+      { $limit: 10 }, //포스팅 갯수 10개로 제한
+    ];
+    if (요청.query.value) {
+      db.collection("post")
+        .aggregate(검색조건)
+        .toArray(function (에러, 결과) {
+          console.log(결과);
+          응답.render("search.ejs", {login, posts: 결과 });
+        });
+    } else {
+      db.collection("post")
+        .find({})
+        .toArray(function (에러, 결과) {
+          console.log(결과);
+          응답.render("search.ejs", {login, posts: 결과 });
+        });
+    }
+  }
+});
+
+app.get("/detail/:id", function (요청, 응답) {
+  if(요청.user){
+    const login = true;
+    db.collection("post").findOne(
+      { _id: parseInt(요청.params.id) },
+      function (에러, 결과) {
+        console.log(결과);
+        응답.render("detail.ejs", {login, data: 결과 });
+      }
+    );
+  }else{
+    const login = false;
+    db.collection("post").findOne(
+      { _id: parseInt(요청.params.id) },
+      function (에러, 결과) {
+        console.log(결과);
+        응답.render("detail.ejs", {login, data: 결과 });
+      }
+    );
+  }
+  
+
+});
+
 app.post("/login", function (요청, 응답, next) {
   passport.authenticate("local", function (에러, user, info) {
     console.log("info", info);
@@ -379,23 +469,30 @@ app.get("/message/:parent", 로그인했니, function (요청, 응답) {
   });
 });
 
+/* Socket */
+
 app.get('/socket', function(요청, 응답){
-  응답.render('socket.ejs');
+  응답.render('socket.ejs')
 });
 
 io.on('connection', function(socket){
-  console.log('접속 완료');
+  console.log('유저접속');
 
-  socket.on('room1-send', function(data){
-    io.to('room1').emit('broadcast', data);
+  socket.join('room1'); // 채팅방 만들고 입장 join
+
+  // 서버가 수신하려면 socket.on(작명, 콜백함수)
+  socket.on('user_send', function(data){ // data -> 유저가 보낸 메세지
+      console.log(data);
+      io.emit('broadcast', data); // 서버가 보내는 메세지
+      // .to() 서버-유저1명간 단독으로 소통
+      // io.to(socket.id).emit('broadcast', data); // socket 접속유저 정보 들어있음
   });
 
-
-  socket.on('joinroom', function(data){
-    socket.join('room1');
+  socket.on('joinroom', function(data){ // data -> 유저가 보낸 메세지
+      socket.join('room1');
   });
 
-  socket.on('user-send', function(data){
-    io.emit('broadcast', data);
+  socket.on('room1_send', function(data){ // data -> 유저가 보낸 메세지
+      io.to('room1').emit('broadcast', data);
   });
 });
